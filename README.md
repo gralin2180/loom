@@ -23,3 +23,13 @@
 ## Rule
 
 No fake product list. Product on site = product you can order from the fulfill app / supplier.
+
+## GitHub (collaboration)
+
+Local git is initialized on `main`. To publish and invite editors:
+
+1. Complete GitHub login if prompted (`gh auth login` or device flow)
+2. Create remote: `gh repo create loom --public --source=. --remote=origin --push`
+3. Add collaborators: GitHub → **Settings → Collaborators**
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for clone / PR workflow.
