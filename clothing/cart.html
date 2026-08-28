@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bag — LOOM</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="announce">
+      <span>Secure checkout</span>
+      <span>Free shipping over $89</span>
+    </div>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="brand" href="index.html">LOOM</a>
+        <nav class="nav-links">
+          <a class="nav-keep" href="shop.html">Shop all</a>
+          <a class="cart-pill" href="cart.html">Bag <b data-cart-count>0</b></a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <div class="page-title">
+        <p class="eyebrow">Checkout</p>
+        <h1>Your bag</h1>
+      </div>
+      <div class="cart-layout">
+        <div id="cart-lines"></div>
+        <aside class="summary" id="cart-summary">
+          <h2>Order summary</h2>
+          <div class="summary-row"><span>Subtotal</span><span id="sum-sub">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="sum-ship">$0</span></div>
+          <div class="summary-row total"><span>Total</span><span id="sum-total">$0</span></div>
+          <p class="note">
+            Free shipping over $89. Confirm fit before placing — wrong size is the #1 return reason.
+          </p>
+          <form id="checkout-form">
+            <div class="form-grid">
+              <label>Full name <input name="name" required autocomplete="name" /></label>
+              <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+              <label>Phone <input name="phone" type="tel" required /></label>
+              <label>Address <input name="address" required /></label>
+              <label>City <input name="city" required /></label>
+              <label
+                >Country / region
+                <select name="country" required>
+                  <option value="India">India</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="European Union">European Union</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+              <label>ZIP / Postal <input name="zip" required /></label>
+              <label
+                >Fit confirmation
+                <select name="fitConfirm" required>
+                  <option value="">I confirm…</option>
+                  <option value="measured">I checked the size chart</option>
+                  <option value="relaxed">Oversized / one-size on purpose</option>
+                </select>
+              </label>
+              <label>Notes <textarea name="notes" placeholder="Delivery notes…"></textarea></label>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Place order</button>
+          </form>
+          <div class="success-box" id="order-success">
+            <h3>Order received</h3>
+            <p>
+              Order <strong data-order-id></strong> saved.
+              <a data-track-link href="track.html" style="text-decoration: underline">Track →</a>
+            </p>
+          </div>
+        </aside>
+      </div>
+    </main>
+    <script src="js/config.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

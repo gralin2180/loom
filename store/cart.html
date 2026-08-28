@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bag — SOLA</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="brand" href="index.html"><span data-brand>SOLA</span></a>
+        <nav class="nav-links">
+          <a href="shop.html">Shop</a>
+          <a href="index.html#about">About</a>
+          <a class="cart-pill" href="cart.html">Bag <em data-cart-count>0</em></a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="page-title">
+        <p class="eyebrow">Checkout</p>
+        <h1>Your bag</h1>
+      </div>
+
+      <div class="cart-layout">
+        <div id="cart-lines" class="cart-lines"></div>
+
+        <aside class="summary" id="cart-summary">
+          <h2>Order</h2>
+          <div class="summary-row"><span>Subtotal</span><span id="sum-sub">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="sum-ship">$0</span></div>
+          <div class="summary-row total"><span>Total</span><span id="sum-total">$0</span></div>
+          <p class="note" id="ship-note"></p>
+
+          <form id="checkout-form">
+            <div class="form-grid">
+              <label>Full name <input name="name" required autocomplete="name" /></label>
+              <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+              <label>Phone <input name="phone" type="tel" required autocomplete="tel" /></label>
+              <label>Address <input name="address" required autocomplete="street-address" /></label>
+              <label>City <input name="city" required autocomplete="address-level2" /></label>
+              <label>Country <input name="country" required autocomplete="country-name" /></label>
+              <label>ZIP / Postal <input name="zip" required autocomplete="postal-code" /></label>
+              <label>Notes <textarea name="notes" placeholder="Color preference, gift note…"></textarea></label>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Place order</button>
+          </form>
+
+          <div class="success-box" id="order-success">
+            <h3>Order received</h3>
+            <p>
+              Reference <strong data-order-id></strong>. A JSON order ticket downloaded so you can
+              fulfill from each product’s real supplier URL. Add WhatsApp + payment link in
+              <code>js/config.js</code> for automated handoff.
+            </p>
+          </div>
+
+          <p class="note">
+            Free demo checkout: no card processing until you set
+            <code>paymentLink</code> (Stripe Payment Link or PayPal.me). Orders always save locally
+            and download as a fulfill ticket.
+          </p>
+        </aside>
+      </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const n = document.getElementById("ship-note");
+        if (n && window.SOLA_CONFIG) {
+          n.textContent =
+            window.SOLA_CONFIG.shippingNote +
+            " Free shipping over $" +
+            window.SOLA_CONFIG.freeShippingMin +
+            ".";
+        }
+      });
+    </script>
+  </body>
+</html>

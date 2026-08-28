@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fit Finder — LOOM</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="announce">
+      <span>Worldwide shipping available</span>
+      <span>Free shipping over $89</span>
+    </div>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="brand" href="index.html">LOOM</a>
+        <nav class="nav-links">
+          <a class="nav-keep" href="shop.html">Shop all</a>
+          <a href="fit.html">Fit guide</a>
+          <a class="cart-pill" href="cart.html">Bag <b data-cart-count>0</b></a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap" style="padding-bottom: 4rem">
+      <div class="page-title">
+        <p class="eyebrow">Lower returns start here</p>
+        <h1>Fit finder</h1>
+        <p class="note" style="max-width: 52ch">
+          Spend a minute measuring — it saves you a return. Use a soft tape against bare skin for
+          waist and over a light shirt for chest.
+        </p>
+      </div>
+
+      <div class="track-box" style="max-width: 640px">
+        <div class="form-grid">
+          <label>What you’re buying
+            <select id="fit-type">
+              <option value="flare">Bell / superflare / horseshoe densim</option>
+              <option value="baby">Baby tee / fitted print tee</option>
+              <option value="oversized">Oversized graphic tee / knit</option>
+              <option value="tailored">Old-money tailored wide trouser</option>
+              <option value="onesize">Elastic waist / super forgiving</option>
+            </select>
+          </label>
+          <label>Chest or bust (inches)
+            <input id="fit-chest" type="number" min="28" max="56" step="0.5" placeholder="e.g. 40" />
+          </label>
+          <label>Waist (inches) — bottoms
+            <input id="fit-waist" type="number" min="24" max="48" step="0.5" placeholder="e.g. 32" />
+          </label>
+          <label>Preferred vibe
+            <select id="fit-vibe">
+              <option value="regular">True / regular</option>
+              <option value="oversized">Oversized / baggy</option>
+              <option value="snug">Snug / close</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" type="button" id="fit-go">Suggest size</button>
+        </div>
+        <div id="fit-out" class="fit-callout" style="display: none; margin-top: 1rem"></div>
+      </div>
+
+      <section class="faq" style="max-width: 720px">
+        <h2 style="font-family: var(--display)">How to measure</h2>
+        <details open>
+          <summary>Chest / bust</summary>
+          <p>Tape around the fullest part, snug but not tight, arms relaxed. Use cm÷2.54 for inches.</p>
+        </details>
+        <details>
+          <summary>Waist</summary>
+          <p>Measure where trousers naturally sit — usually just above the hip bones, not the belly button flare.</p>
+        </details>
+        <details>
+          <summary>Between sizes?</summary>
+          <p>
+            Oversized styles → size down one. Fitted / rib → size up one. Accessories → one size is fine.
+          </p>
+        </details>
+      </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      document.getElementById("fit-go").addEventListener("click", () => {
+        const type = document.getElementById("fit-type").value;
+        const chest = parseFloat(document.getElementById("fit-chest").value);
+        const waist = parseFloat(document.getElementById("fit-waist").value);
+        const vibe = document.getElementById("fit-vibe").value;
+        const out = document.getElementById("fit-out");
+
+        if (type === "onesize") {
+          out.style.display = "block";
+          out.innerHTML =
+            "<strong>Recommendation:</strong> Elastic / plissé pieces (e.g. Drift Palazzo) — size is mostly waist stretch. Lowest return risk on broader bottoms.";
+          return;
+        }
+
+        if (type === "flare" || type === "tailored") {
+          if (!waist) {
+            out.style.display = "block";
+            out.innerHTML = "Enter waist inches. Flares and wide trousers size from the waist — the huge hem is intentional, not a defect.";
+            return;
+          }
+          let size = "28 / M";
+          if (waist < 26) size = "24–26 / XS–S";
+          else if (waist < 28) size = "26–28 / S";
+          else if (waist < 30) size = "28–30 / M";
+          else if (waist < 32) size = "30–32 / M–L";
+          else if (waist < 34) size = "32–34 / L";
+          else size = "34+ / XL";
+          out.style.display = "block";
+          out.innerHTML = `<strong>Suggested waist:</strong> ${size}<br /><span style="color:var(--muted)">Bell/superflare length stacks long — good over sneakers. Open the product chart to lock the exact number.</span>`;
+          return;
+        }
+
+        if (type === "baby") {
+          if (!chest) {
+            out.style.display = "block";
+            out.innerHTML = "Enter bust/chest for baby tees.";
+            return;
+          }
+          let size = "M";
+          if (chest < 32) size = "XS";
+          else if (chest < 34) size = "S";
+          else if (chest < 36) size = "M";
+          else size = "L";
+          if (vibe !== "snug") size += " — between sizes? size up";
+          out.style.display = "block";
+          out.innerHTML = `<strong>Suggested:</strong> ${size}`;
+          return;
+        }
+
+        const measure = chest || waist;
+        if (!measure) {
+          out.style.display = "block";
+          out.innerHTML = "Enter a chest measurement for oversized tees/knits.";
+          return;
+        }
+        let size = "M";
+        if (measure < 38) size = "S";
+        else if (measure < 40) size = "M";
+        else if (measure < 44) size = "L";
+        else if (measure < 46) size = "XL";
+        else size = "2XL";
+        if (vibe === "oversized") size += " (or size up once more for thrifted drape)";
+        out.style.display = "block";
+        out.innerHTML = `<strong>Suggested:</strong> ${size}`;
+      });
+    </script>
+  </body>
+</html>

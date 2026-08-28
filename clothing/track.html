@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Track order — LOOM</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="announce">
+      <span>Track updates · after fulfillment</span>
+      <span>Care assist 24/7</span>
+    </div>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="brand" href="index.html">LOOM</a>
+        <nav class="nav-links">
+          <a class="nav-keep" href="shop.html">Shop all</a>
+          <a href="track.html">Track</a>
+          <a class="cart-pill" href="cart.html">Bag <b data-cart-count>0</b></a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="page-title">
+        <p class="eyebrow">Automated peace of mind</p>
+        <h1>Track your order</h1>
+        <p class="note" style="max-width: 52ch">
+          In production this page pulls carrier scans via AfterShip / 17TRACK and emails you every
+          hop. Demo uses orders placed on this device.
+        </p>
+      </div>
+
+      <div class="track-box">
+        <form id="track-form" class="form-grid">
+          <label>Order ID <input name="orderId" required placeholder="LM-XXXX" /></label>
+          <label>Email used at checkout <input name="email" type="email" placeholder="optional match" /></label>
+          <button class="btn btn-primary" type="submit">Show status</button>
+        </form>
+        <div id="track-result" style="margin-top: 1rem"></div>
+      </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

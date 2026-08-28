@@ -1,0 +1,26 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Secrets — never commit
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Logs / temp
+*.log
+npm-debug.log*
+node_modules/
+dist/
+.cache/
+
+# Cursor / local tooling
+.cursor/
