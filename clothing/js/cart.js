@@ -3,7 +3,11 @@
 
   function read() {
     try {
-      return JSON.parse(localStorage.getItem(KEY) || "[]");
+      const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+      if (!Array.isArray(saved)) return [];
+      return saved.filter(row => row && Number.isInteger(row.qty) && row.qty > 0 &&
+        window.LOOM_PRODUCTS.some(p => p.id === row.id &&
+          p.sizes.includes(row.size) && (p.colors || ["Default"]).includes(row.color)));
     } catch {
       return [];
     }
@@ -23,6 +27,9 @@
       }, 0);
     },
     add(id, qty = 1, opts = {}) {
+      const product = window.LOOM_PRODUCTS.find(p => p.id === id);
+      if (!product || !Number.isInteger(qty) || qty < 1 ||
+        !product.sizes.includes(opts.size) || !(product.colors || ["Default"]).includes(opts.color)) return;
       const items = read();
       const size = opts.size || "";
       const color = opts.color || "";
@@ -34,6 +41,7 @@
       write(items);
     },
     setQty(key, qty) {
+      if (!Number.isInteger(qty)) return;
       let items = read();
       const [id, size, color] = key.split("||");
       if (qty <= 0) {

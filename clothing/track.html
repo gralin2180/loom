@@ -1,50 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Track order — LOOM</title>
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body>
-    <div class="announce">
-      <span>Track updates · after fulfillment</span>
-      <span>Care assist 24/7</span>
-    </div>
-    <header class="site-header">
-      <div class="wrap nav">
-        <a class="brand" href="index.html">LOOM</a>
-        <nav class="nav-links">
-          <a class="nav-keep" href="shop.html">Shop all</a>
-          <a href="track.html">Track</a>
-          <a class="cart-pill" href="cart.html">Bag <b data-cart-count>0</b></a>
-        </nav>
-      </div>
-    </header>
-
-    <main class="wrap">
-      <div class="page-title">
-        <p class="eyebrow">Automated peace of mind</p>
-        <h1>Track your order</h1>
-        <p class="note" style="max-width: 52ch">
-          In production this page pulls carrier scans via AfterShip / 17TRACK and emails you every
-          hop. Demo uses orders placed on this device.
-        </p>
-      </div>
-
-      <div class="track-box">
-        <form id="track-form" class="form-grid">
-          <label>Order ID <input name="orderId" required placeholder="LM-XXXX" /></label>
-          <label>Email used at checkout <input name="email" type="email" placeholder="optional match" /></label>
-          <button class="btn btn-primary" type="submit">Show status</button>
-        </form>
-        <div id="track-result" style="margin-top: 1rem"></div>
-      </div>
-    </main>
-
-    <script src="js/config.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LOOM. An independent perspective on everyday style. Explore the first collection preview and find your fit.">
+<meta name="theme-color" content="#f5f3ed">
+<title>Order status — LOOM</title>
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/shell.js" defer></script>
+<script src="js/config.js" defer></script>
+<script src="js/products.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/app.js" defer></script>
+</head>
+<body><div data-header></div><main id="main"><section class="wrap"><div class="page-title"><p class="eyebrow">Every step, in view</p><h1>Order status.</h1><p>The collection is not open for orders yet.<br>Existing preview records can be checked on this device.</p></div><div class="guide-layout"><div class="track-box"><h2>Find a preview record</h2><form id="track-form" class="form-grid"><label>Reference number<input name="orderId" required placeholder="LM-XXXX" autocomplete="off"></label><label>Email used for the record<input name="email" type="email" required autocomplete="email"></label><button class="btn btn-primary" type="submit">Check status <span>↗</span></button></form><div id="track-result" aria-live="polite"></div></div><div class="side-note"><p class="eyebrow">A note on tracking</p><h2>Clear information.<br>No guesswork.</h2><p>Preview records are stored in your browser. They are not paid orders, and no live carrier tracking is connected.</p><a class="text-link" href="care.html">Visit customer care ↗</a></div></div></section>
+</main><div data-footer></div></body>
 </html>

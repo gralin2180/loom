@@ -17,6 +17,7 @@
     if (!el) {
       el = document.createElement("div");
       el.className = "toast";
+      el.setAttribute("role", "status");
       document.body.appendChild(el);
     }
     el.textContent = msg;
@@ -68,7 +69,7 @@
     const el = document.getElementById("featured-grid");
     if (!el) return;
     if (!window.LOOM_PRODUCTS.length) {
-      el.innerHTML = `<div class="empty" style="grid-column:1/-1">No products yet. Catalog stays empty until real supplier links are added.</div>`;
+      el.innerHTML = `<div class="empty" style="grid-column:1/-1"><span class="empty-symbol" aria-hidden="true">↗</span><h2>A good thing in the making.</h2><p>Our first edit is taking shape. There are no pieces available to shop just yet.</p><a class="text-link" href="care.html">A little more about LOOM ↗</a></div>`;
       return;
     }
     const picks = window.LOOM_PRODUCTS.slice(0, 8);
@@ -79,7 +80,7 @@
     const el = document.getElementById("shop-grid");
     if (!el) return;
     if (!window.LOOM_PRODUCTS.length) {
-      el.innerHTML = `<div class="empty" style="grid-column:1/-1">No products listed. Paste real supplier product URLs and we’ll add only those.</div>`;
+      el.innerHTML = `<div class="empty" style="grid-column:1/-1"><span class="empty-symbol" aria-hidden="true">↗</span><h2>The first edit is on its way.</h2><p>We’re taking a little time to get the details right. Check back for pieces, fit notes and the full collection.</p><a class="text-link" href="index.html#perspective">Explore our perspective ↗</a></div>`;
       const count = document.getElementById("result-count");
       if (count) count.textContent = "Showing 0 products";
       const filters = document.getElementById("shop-filters");
@@ -144,13 +145,13 @@
     const root = document.getElementById("pdp");
     if (!root) return;
     if (!window.LOOM_PRODUCTS.length) {
-      root.innerHTML = `<p class="empty">No products in the catalog yet.</p>`;
+      root.innerHTML = `<div class="empty"><span class="empty-symbol" aria-hidden="true">↗</span><h2>The details are still taking shape.</h2><p>Product pages will open with the first collection.</p><a class="text-link" href="shop.html">Back to the collection ↗</a></div>`;
       return;
     }
     const id = new URLSearchParams(location.search).get("id");
-    const p = window.LOOM_PRODUCTS.find((x) => x.id === id) || window.LOOM_PRODUCTS[0];
+    const p = window.LOOM_PRODUCTS.find((x) => x.id === id);
     if (!p) {
-      root.innerHTML = `<p class="empty">Piece not found.</p>`;
+      root.innerHTML = `<div class="empty"><h2>Piece not found.</h2><p>This piece is no longer in the collection.</p><a class="text-link" href="shop.html">View the collection ↗</a></div>`;
       return;
     }
     document.title = p.name + " — LOOM";
@@ -206,7 +207,7 @@
         </div>
         <div class="select-row" style="grid-template-columns:120px 1fr">
           <label>Qty <input id="sel-qty" type="number" min="1" value="1" /></label>
-          <label style="align-content:end"><button class="btn btn-primary btn-block" id="pdp-add" type="button">Add to bag</button></label>
+          <div style="align-content:end"><button class="btn btn-primary btn-block" id="pdp-add" type="button">Add to bag</button></div>
         </div>
         <ul>${(p.bullets || []).map((b) => `<li>${b}</li>`).join("")}</ul>
         <h3 style="font-family:var(--display);margin:1.5rem 0 0.5rem">Size guide</h3>
@@ -247,7 +248,7 @@
     function draw() {
       const items = window.LoomCart.get();
       if (!items.length) {
-        linesEl.innerHTML = `<div class="empty">Your bag is empty. <a href="shop.html" style="color:var(--accent)">Shop the edit</a></div>`;
+        linesEl.innerHTML = `<div class="empty"><span class="empty-symbol" aria-hidden="true">↗</span><h2>A little space for something good.</h2><p>Your bag is empty. Explore the collection and find your next favourite.</p><a class="btn btn-primary" href="shop.html">Explore the collection ↗</a></div>`;
         summaryEl.style.display = "none";
         return;
       }
@@ -264,8 +265,8 @@
                 <h3>${p.name}</h3>
                 <div class="opts">${row.size || "—"} · ${row.color || "—"} · ${money(p.price)}</div>
                 <div style="margin-top:0.5rem;display:flex;gap:0.5rem;align-items:center">
-                  <input type="number" min="1" value="${row.qty}" data-qty="${key}" style="width:3.2rem;padding:0.35rem;background:var(--bg-soft);border:1px solid var(--line-strong);color:var(--text);font-family:var(--body)" />
-                  <button class="btn btn-ghost" style="padding:0.35rem 0.55rem;font-size:0.7rem" data-remove="${key}">Remove</button>
+                  <input type="number" min="1" value="${row.qty}" data-qty="${key}" aria-label="Quantity for ${p.name}" style="width:4rem;padding:0.35rem;background:var(--bg-soft);border:1px solid var(--line-strong);color:var(--text);font-family:var(--body)" />
+                  <button class="btn btn-ghost" style="padding:0.35rem 0.55rem;font-size:0.9rem" data-remove="${key}">Remove</button>
                 </div>
               </div>
               <div class="line-total">${money(p.price * row.qty)}</div>
@@ -274,11 +275,9 @@
         .join("");
 
       const sub = window.LoomCart.subtotal();
-      const freeMin = (window.LOOM_CONFIG && window.LOOM_CONFIG.freeShippingMin) || 89;
-      const ship = sub >= freeMin ? 0 : 8;
       document.getElementById("sum-sub").textContent = money(sub);
-      document.getElementById("sum-ship").textContent = ship === 0 ? "Free" : money(ship);
-      document.getElementById("sum-total").textContent = money(sub + ship);
+      document.getElementById("sum-ship").textContent = "Available at launch";
+      document.getElementById("sum-total").textContent = money(sub);
 
       linesEl.querySelectorAll("[data-qty]").forEach((input) => {
         input.addEventListener("change", () => {
@@ -298,86 +297,6 @@
 
     draw();
 
-    const form = document.getElementById("checkout-form");
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const items = window.LoomCart.get();
-        if (!items.length) return;
-        const data = Object.fromEntries(new FormData(form).entries());
-        const sub = window.LoomCart.subtotal();
-        const freeMin = (window.LOOM_CONFIG && window.LOOM_CONFIG.freeShippingMin) || 89;
-        const ship = sub >= freeMin ? 0 : 8;
-        const prefix = (window.LOOM_CONFIG && window.LOOM_CONFIG.trackingPrefix) || "LM";
-        const order = {
-          id: prefix + "-" + Date.now().toString(36).toUpperCase(),
-          createdAt: new Date().toISOString(),
-          status: "confirmed",
-          customer: data,
-          items: items.map((row) => {
-            const p = window.LOOM_PRODUCTS.find((x) => x.id === row.id);
-            return {
-              id: row.id,
-              name: p ? p.name : row.id,
-              size: row.size,
-              color: row.color,
-              qty: row.qty,
-              price: p ? p.price : 0,
-              sourceHint: p ? p.sourceHint : "",
-              returnRisk: p ? p.returnRisk : "",
-            };
-          }),
-          subtotal: sub,
-          shipping: ship,
-          total: sub + ship,
-          milestones: [
-            { key: "confirmed", label: "Order confirmed", at: new Date().toISOString() },
-            { key: "sourced", label: "Sent to fulfillment partner", at: null },
-            { key: "shipped", label: "Shipped · tracking shared", at: null },
-            { key: "transit", label: "In international transit", at: null },
-            { key: "delivered", label: "Delivered", at: null },
-          ],
-        };
-
-        const orders = JSON.parse(localStorage.getItem("loom_orders_v1") || "[]");
-        orders.push(order);
-        localStorage.setItem("loom_orders_v1", JSON.stringify(orders));
-
-        const blob = new Blob([JSON.stringify(order, null, 2)], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = order.id + ".json";
-        a.click();
-        URL.revokeObjectURL(a.href);
-
-        const msg = encodeURIComponent(
-          `LOOM order ${order.id}\n` +
-            order.items
-              .map((i) => `• ${i.qty}× ${i.name} (${i.size}/${i.color})`)
-              .join("\n") +
-            `\nTotal ${money(order.total)}\n${data.name}\n${data.email}\n${data.address}, ${data.city}, ${data.country} ${data.zip}`
-        );
-        if (window.LOOM_CONFIG.whatsapp) {
-          window.open(`https://wa.me/${window.LOOM_CONFIG.whatsapp}?text=${msg}`, "_blank");
-        }
-        if (window.LOOM_CONFIG.paymentLink) {
-          window.open(window.LOOM_CONFIG.paymentLink, "_blank");
-        }
-
-        const box = document.getElementById("order-success");
-        if (box) {
-          box.classList.add("show");
-          box.querySelector("[data-order-id]").textContent = order.id;
-          const trackLink = box.querySelector("[data-track-link]");
-          if (trackLink) trackLink.href = "track.html?id=" + encodeURIComponent(order.id);
-        }
-
-        window.LoomCart.clear();
-        updateCartCount();
-        draw();
-        toast("Order saved · ticket downloaded");
-      });
-    }
   }
 
   function renderTrack() {
@@ -389,57 +308,41 @@
     if (prefill) form.querySelector('[name="orderId"]').value = prefill;
 
     function showOrder(order) {
-      // Simulate progression for demo if order is brand new
-      const ageMin = (Date.now() - new Date(order.createdAt).getTime()) / 60000;
-      const steps = order.milestones.map((m, i) => {
-        let state = "";
-        if (i === 0 || ageMin > i * 0.01) state = "done";
-        if (ageMin > 0 && i === Math.min(2, order.milestones.length - 1)) state = "done";
-        if (i === 1) state = "active";
-        if (ageMin > 5 && i <= 2) state = "done";
-        if (ageMin > 5 && i === 3) state = "active";
-        return { ...m, state };
-      });
-      // Always mark confirmed done on any real order
-      steps[0].state = "done";
-      if (!steps.some((s) => s.state === "active")) steps[1].state = "active";
-
-      out.innerHTML = `
-        <p class="eyebrow">Order ${order.id}</p>
-        <h2 style="font-family:var(--display);margin:0.25rem 0 0.75rem">We’ve got this.</h2>
-        <p class="note" style="margin-top:0">Updates push automatically when tracking is linked. You’re never stuck guessing where your package is.</p>
-        <ul class="timeline">
-          ${steps
-            .map(
-              (s) =>
-                `<li class="${s.state}"><strong>${s.label}</strong><br /><span style="font-size:0.8rem">${
-                  s.at ? new Date(s.at).toLocaleString() : "Pending automation"
-                }</span></li>`
-            )
-            .join("")}
-        </ul>
-        <p class="note">Items: ${order.items.map((i) => `${i.qty}× ${i.name} (${i.size})`).join(", ")}</p>
-      `;
+      out.replaceChildren();
+      const title = document.createElement("h3");
+      title.textContent = "Preview record " + order.id;
+      const note = document.createElement("p");
+      note.className = "note";
+      note.textContent = "Saved on this device. This is not a paid order. Fulfillment and carrier tracking are not connected.";
+      out.append(title, note);
+      const list = document.createElement("ul");
+      for (const item of order.items || []) {
+        const row = document.createElement("li");
+        row.textContent = item.qty + " × " + item.name + (item.size ? " / " + item.size : "");
+        list.append(row);
+      }
+      out.append(list);
     }
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const id = form.orderId.value.trim().toUpperCase();
-      const email = (form.email.value || "").trim().toLowerCase();
-      const orders = JSON.parse(localStorage.getItem("loom_orders_v1") || "[]");
+      const id = form.elements.namedItem("orderId").value.trim().toUpperCase();
+      const email = (form.elements.namedItem("email").value || "").trim().toLowerCase();
+      let orders = [];
+      try { const saved = JSON.parse(localStorage.getItem("loom_orders_v1") || "[]"); if (Array.isArray(saved)) orders = saved; } catch {}
       const order = orders.find(
         (o) =>
-          o.id.toUpperCase() === id &&
-          (!email || (o.customer.email || "").toLowerCase() === email)
+          typeof o.id === "string" && o.id.toUpperCase() === id &&
+          email && (o.customer?.email || "").toLowerCase() === email
       );
       if (!order) {
-        out.innerHTML = `<p class="note">No order found in this browser. Place a demo order first, or paste the ID from your JSON ticket. Live site will use AfterShip/17TRACK API here.</p>`;
+        out.innerHTML = `<p class="note">No matching preview record on this device. Check the reference and email. Live order tracking will be available when the store opens.</p>`;
         return;
       }
       showOrder(order);
     });
 
-    if (prefill) form.requestSubmit();
+
   }
 
   /* —— Automated CS chatbot (rule-based free) —— */
@@ -448,16 +351,16 @@
     const root = document.createElement("div");
     root.id = "loom-chat-root";
     root.innerHTML = `
-      <button type="button" class="chat-fab" id="chat-fab" aria-label="Open support">CS</button>
-      <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Loom Assist">
+      <button type="button" class="chat-fab" id="chat-fab" aria-label="Open support" aria-expanded="false" aria-controls="chat-panel">Help</button>
+      <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Loom Assist" hidden>
         <div class="chat-head">
-          <span>Loom Assist · 24/7</span>
+          <span>LOOM / Quick help</span>
           <button type="button" id="chat-close" aria-label="Close">×</button>
         </div>
-        <div class="chat-log" id="chat-log"></div>
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
         <div class="chat-quick" id="chat-quick"></div>
         <form class="chat-input" id="chat-form">
-          <input name="q" autocomplete="off" placeholder="Ask about size, shipping, returns…" />
+          <input name="q" aria-label="Your question" autocomplete="off" placeholder="Ask about size, shipping, returns…" />
           <button type="submit">Send</button>
         </form>
       </div>`;
@@ -478,20 +381,16 @@
     function answer(q) {
       const t = q.toLowerCase();
       if (/size|fit|chart|small|large|xs|xl/.test(t)) {
-        return "Open the size guide on the product page. If you’re between sizes on loose styles, sizing up is usually safer.";
+        return "Start with Fit notes to record your measurements. Compare them with the specific garment’s chart when the collection opens; sizes vary by style.";
       }
       if (/ship|deliver|track|where|package|late/.test(t)) {
-        return "We ship worldwide. International delivery is often 7–18 business days. Track with your order ID under Track.";
+        return "Orders are not open yet. Destinations, shipping prices and delivery estimates will be confirmed at launch. Order status currently checks preview records on this device.";
       }
       if (/return|exchange|refund/.test(t)) {
-        return "Please measure using the size guide before ordering. For exchange help, contact care with your order ID and photos.";
+        return "Our return and exchange policy will be available before orders open. Read Customer care for the current collection status.";
       }
       if (/help|human|agent|support|email/.test(t)) {
-        return (
-          "I help with size, shipping, and tracking. For other issues email " +
-          ((window.LOOM_CONFIG && window.LOOM_CONFIG.supportEmail) || "support") +
-          " with your order ID."
-        );
+        return "This is automated preview help. A customer contact channel will be available before launch. Read Customer care for details.";
       }
       return "Ask about sizes, shipping, tracking, or returns.";
     }
@@ -512,11 +411,24 @@
       setTimeout(() => add("bot", answer(b.dataset.q)), 280);
     });
 
-    document.getElementById("chat-fab").onclick = () => panel.classList.add("open");
-    document.getElementById("chat-close").onclick = () => panel.classList.remove("open");
+    const fab = document.getElementById("chat-fab");
+    function closeChat() {
+      panel.classList.remove("open");
+      panel.hidden = true;
+      fab.setAttribute("aria-expanded", "false");
+      fab.focus();
+    }
+    fab.onclick = () => {
+      panel.hidden = false;
+      panel.classList.add("open");
+      fab.setAttribute("aria-expanded", "true");
+      document.querySelector("#chat-form input").focus();
+    };
+    document.getElementById("chat-close").onclick = closeChat;
+    panel.addEventListener("keydown", event => { if (event.key === "Escape") closeChat(); });
     document.getElementById("chat-form").onsubmit = (e) => {
       e.preventDefault();
-      const input = e.target.q;
+      const input = e.target.elements.namedItem("q");
       const q = input.value.trim();
       if (!q) return;
       add("user", q);
@@ -537,5 +449,17 @@
     renderCart();
     renderTrack();
     initChat();
+    const fitForm = document.getElementById("fit-form");
+    if (fitForm) fitForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const unit = document.getElementById("fit-unit").value;
+      const chest = Number(document.getElementById("fit-chest").value);
+      const waist = Number(document.getElementById("fit-waist").value);
+      const fit = document.getElementById("fit-vibe").value;
+      const result = document.getElementById("fit-out");
+      result.hidden = false;
+      const convert = value => unit === "cm" ? (value / 2.54).toFixed(1) + " in" : (value * 2.54).toFixed(1) + " cm";
+      result.textContent = "Chest: " + chest + " " + unit + " (" + convert(chest) + "). Waist: " + waist + " " + unit + " (" + convert(waist) + "). Preferred fit: " + fit + ". Compare these notes with each garment’s chart; this is not a size recommendation.";
+    });
   });
 })();
